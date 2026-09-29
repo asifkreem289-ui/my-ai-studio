@@ -3,168 +3,479 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>My AI Studio</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root{
+  --bg:#212121;
+  --bg-soft:#171717;
+  --panel:#1a1a1a;
+  --panel-2:#0f0f0f;
+  --line:#2f2f2f;
+  --line-soft:#3a3a3a;
+  --txt:#ececec;
+  --muted:#9b9b9b;
+  --accent:#3b82f6;
+  --accent-soft:#1d4ed8;
+  --bubble-user:#303030;
+  --radius:16px;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #0b0f19;
-    color: white;
-    min-height: 100vh;
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{height:100%}
+
+body{
+  font-family:"Segoe UI",Inter,system-ui,-apple-system,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
 }
 
-header {
-    padding: 18px;
-    text-align: center;
-    background: #111827;
-    border-bottom: 1px solid #273244;
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- HEADER ---------- */
+header{
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  background:var(--bg-soft);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
-header h1 {
-    font-size: 24px;
+.brand{display:flex;align-items:center;gap:10px}
+
+.brandIcon{
+  width:32px;height:32px;
+  display:grid;place-items:center;
+  border-radius:9px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  color:#fff;
 }
 
-header p {
-    margin-top: 6px;
-    color: #9ca3af;
-    font-size: 13px;
+.brandIcon svg{width:18px;height:18px}
+
+.logo{font-size:16px;font-weight:600;letter-spacing:.2px}
+
+.status{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;
+  color:var(--muted);
+  background:#232323;
+  border:1px solid var(--line);
+  padding:6px 12px;
+  border-radius:999px;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 3px rgba(34,197,94,.15);
 }
 
-.hero {
-    text-align: center;
-    padding: 25px 10px;
+/* ---------- LAYOUT ---------- */
+.app{
+  max-width:900px;
+  margin:0 auto;
+  padding:18px 14px 40px;
 }
 
-.hero h2 {
-    font-size: 28px;
-    margin-bottom: 10px;
+.project{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:14px;
 }
 
-.hero p {
-    color: #9ca3af;
-    line-height: 1.5;
+.projectTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-top: 20px;
+.projectTitle{font-size:17px;font-weight:600}
+
+.subtitle{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+.badge{
+  font-size:10.5px;
+  letter-spacing:.5px;
+  font-weight:600;
+  padding:6px 11px;
+  border-radius:999px;
+  background:rgba(59,130,246,.12);
+  color:#93c5fd;
+  border:1px solid rgba(59,130,246,.25);
+  white-space:nowrap;
 }
 
-.card {
-    background: #151c2b;
-    border: 1px solid #273244;
-    border-radius: 16px;
-    padding: 20px;
-    cursor: pointer;
-    transition: 0.2s;
+/* ---------- CHAT ---------- */
+.chat{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    border-color: #4b5563;
+.messages{
+  min-height:420px;
+  max-height:56vh;
+  overflow-y:auto;
+  padding:20px 16px 8px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-.icon {
-    font-size: 32px;
-    margin-bottom: 10px;
+.msg{
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  animation:fade .25s ease;
 }
 
-.card h3 {
-    margin-bottom: 7px;
+@keyframes fade{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
 }
 
-.card p {
-    color: #9ca3af;
-    font-size: 13px;
-    line-height: 1.4;
+.msg.user{flex-direction:row-reverse}
+
+.avatar{
+  flex:0 0 30px;
+  width:30px;height:30px;
+  border-radius:8px;
+  display:grid;place-items:center;
+  background:#2a2a2a;
+  border:1px solid var(--line-soft);
+  color:#c7c7c7;
 }
 
-.panel {
-    display: none;
-    margin-top: 20px;
-    background: #151c2b;
-    border: 1px solid #273244;
-    border-radius: 16px;
-    padding: 20px;
+.msg.user .avatar{
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  border-color:transparent;
+  color:#fff;
 }
 
-.panel.active {
-    display: block;
+.avatar svg{width:15px;height:15px}
+
+.bubble{
+  max-width:82%;
+  padding:12px 15px;
+  border-radius:14px;
+  line-height:1.6;
+  font-size:14px;
+  white-space:pre-wrap;
+  word-break:break-word;
 }
 
-textarea,
-input,
-select {
-    width: 100%;
-    margin-top: 10px;
-    padding: 13px;
-    border-radius: 10px;
-    border: 1px solid #374151;
-    background: #0b0f19;
-    color: white;
-    outline: none;
+.msg.ai .bubble{
+  background:#232323;
+  border:1px solid var(--line);
+  border-top-left-radius:5px;
 }
 
-textarea {
-    min-height: 130px;
-    resize: vertical;
+.msg.user .bubble{
+  background:var(--bubble-user);
+  border:1px solid var(--line-soft);
+  border-top-right-radius:5px;
 }
 
-button {
-    margin-top: 12px;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+/* typing dots */
+.bubble.typing{display:flex;gap:5px;align-items:center;padding:15px}
+
+.bubble.typing span{
+  width:7px;height:7px;border-radius:50%;
+  background:#8b8b8b;
+  animation:bounce 1.2s infinite;
 }
 
-button.secondary {
-    background: #374151;
+.bubble.typing span:nth-child(2){animation-delay:.15s}
+.bubble.typing span:nth-child(3){animation-delay:.3s}
+
+@keyframes bounce{
+  0%,60%,100%{transform:translateY(0);opacity:.4}
+  30%{transform:translateY(-5px);opacity:1}
 }
 
-.output {
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 10px;
-    background: #0b0f19;
-    color: #d1d5db;
-    min-height: 50px;
-    white-space: pre-wrap;
+/* ---------- COMPOSER ---------- */
+.createBox{
+  padding:14px 16px 16px;
+  border-top:1px solid var(--line);
+  background:var(--panel);
 }
 
-footer {
-    text-align: center;
-    padding: 25px;
-    color: #6b7280;
-    font-size: 12px;
+.composer{
+  background:#2a2a2a;
+  border:1px solid var(--line-soft);
+  border-radius:22px;
+  padding:10px 10px 10px 16px;
+  transition:border-color .2s;
 }
 
-@media (max-width: 600px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
+.composer:focus-within{border-color:#4b4b4b}
 
-    .hero h2 {
-        font-size: 23px;
-    }
+textarea{
+  width:100%;
+  min-height:56px;
+  max-height:180px;
+  resize:none;
+  background:transparent;
+  color:var(--txt);
+  border:none;
+  outline:none;
+  font-size:14px;
+  font-family:inherit;
+  line-height:1.6;
+  padding:4px 4px 4px 0;
+}
+
+textarea::placeholder{color:#7c7c7c}
+
+.toolbar{
+  display:flex;
+  gap:7px;
+  align-items:center;
+  margin-top:8px;
+  overflow-x:auto;
+  padding-bottom:2px;
+  scrollbar-width:none;
+}
+
+.toolbar::-webkit-scrollbar{display:none}
+
+.tool{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  background:#333;
+  border:1px solid #404040;
+  color:#dcdcdc;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-family:inherit;
+  transition:background .15s,border-color .15s;
+}
+
+.tool:hover{background:#3d3d3d;border-color:#505050}
+
+.tool svg{width:14px;height:14px;opacity:.85}
+
+.send{
+  margin-left:auto;
+  display:grid;
+  place-items:center;
+  width:36px;height:36px;
+  flex:0 0 36px;
+  background:var(--accent);
+  border:none;
+  border-radius:50%;
+  color:#fff;
+  transition:background .15s,transform .15s;
+}
+
+.send:hover{background:var(--accent-soft)}
+.send:active{transform:scale(.94)}
+.send svg{width:17px;height:17px}
+
+/* ---------- FEATURE CARDS ---------- */
+.controls{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+
+.control{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:15px;
+  transition:border-color .2s,transform .2s;
+}
+
+.control:hover{border-color:#3f3f3f;transform:translateY(-2px)}
+
+.controlIcon{
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border-radius:10px;
+  background:#242424;
+  border:1px solid var(--line-soft);
+  color:#93c5fd;
+  margin-bottom:11px;
+}
+
+.controlIcon svg{width:17px;height:17px}
+
+.control h3{font-size:13.5px;font-weight:600;margin-bottom:5px}
+
+.control p{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ---------- SCENES ---------- */
+.scenes{
+  margin-top:14px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px;
+}
+
+.sectionTitle{
+  font-size:14.5px;
+  font-weight:600;
+  margin-bottom:13px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.sectionTitle svg{width:16px;height:16px;color:#93c5fd}
+
+.sceneList{
+  display:flex;
+  gap:11px;
+  overflow-x:auto;
+  padding-bottom:6px;
+}
+
+.scene{
+  min-width:172px;
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+  transition:border-color .2s;
+}
+
+.scene:hover{border-color:#3f3f3f}
+
+.sceneThumb{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:8px;
+  overflow:hidden;
+  background:#161616;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  margin-bottom:9px;
+}
+
+.sceneThumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+.sceneThumb svg{width:22px;height:22px;color:#4a4a4a}
+
+.sceneNumber{
+  font-size:10px;
+  letter-spacing:.7px;
+  font-weight:600;
+  color:#60a5fa;
+  margin-bottom:5px;
+}
+
+.sceneTitle{
+  font-size:12.5px;
+  font-weight:600;
+  margin-bottom:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.sceneStatus{font-size:10.5px;color:var(--muted)}
+
+.sceneStatus.done{color:#4ade80}
+.sceneStatus.working{color:#fbbf24}
+
+.emptyState{
+  font-size:12.5px;
+  color:var(--muted);
+  padding:22px 6px;
+  text-align:center;
+  width:100%;
+}
+
+.progress{
+  margin-top:14px;
+  background:#0f0f0f;
+  border:1px solid var(--line);
+  border-radius:999px;
+  height:8px;
+  overflow:hidden;
+}
+
+.progressBar{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+
+/* ---------- ACTIONS ---------- */
+.actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-top:14px;
+}
+
+.action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:12px;
+  border:1px solid var(--line-soft);
+  border-radius:11px;
+  background:#262626;
+  color:var(--txt);
+  font-weight:600;
+  font-size:12px;
+  font-family:inherit;
+  transition:background .15s,border-color .15s;
+}
+
+.action:hover{background:#303030;border-color:#4a4a4a}
+.action svg{width:15px;height:15px}
+
+.action.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+.action.primary:hover{background:var(--accent-soft);border-color:var(--accent-soft)}
+
+footer{
+  text-align:center;
+  padding:26px 16px;
+  color:#6b6b6b;
+  font-size:11px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:700px){
+  .controls{grid-template-columns:repeat(2,1fr)}
+  .actions{grid-template-columns:1fr}
+  .bubble{max-width:88%}
+  .messages{max-height:60vh}
+  .app{padding:14px 10px 30px}
 }
 </style>
 </head>
@@ -172,211 +483,582 @@ footer {
 <body>
 
 <header>
-    <h1>🤖 My AI Studio</h1>
-    <p>Your personal AI creation workspace</p>
+  <div class="brand">
+    <div class="brandIcon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>
+        <circle cx="12" cy="12" r="3.2"/>
+      </svg>
+    </div>
+    <div class="logo">My AI Studio</div>
+  </div>
+
+  <div class="status"><span class="dot"></span> Studio Ready</div>
 </header>
 
-<div class="container">
+<main class="app">
 
-    <section class="hero">
-        <h2>AI Creation Studio</h2>
-        <p>
-            Create scripts, images, videos, voices and complete projects
-            from your Android phone.
-        </p>
-    </section>
-
-    <div class="grid">
-
-        <div class="card" onclick="openPanel('chat')">
-            <div class="icon">🧠</div>
-            <h3>AI Chat</h3>
-            <p>Ask questions and work with your AI assistant.</p>
+  <!-- PROJECT -->
+  <section class="project">
+    <div class="projectTop">
+      <div>
+        <div class="projectTitle">New AI Video Project</div>
+        <div class="subtitle">
+          Chat → Script → Images → Video → Voice → Final Video
         </div>
+      </div>
+      <div class="badge">15 MIN PROJECT</div>
+    </div>
+  </section>
 
-        <div class="card" onclick="openPanel('script')">
-            <div class="icon">✍️</div>
-            <h3>Script Generator</h3>
-            <p>Create stories, documentaries and video scripts.</p>
+  <!-- CHAT -->
+  <section class="chat">
+
+    <div class="messages" id="messages">
+      <div class="msg ai">
+        <div class="avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
+            <circle cx="12" cy="12" r="3.2"/>
+          </svg>
         </div>
+        <div class="bubble">👋 Assalamualaikum!
 
-        <div class="card" onclick="openPanel('image')">
-            <div class="icon">🖼️</div>
-            <h3>Image Generator</h3>
-            <p>Generate images from text prompts.</p>
-        </div>
+میں آپ کا AI Studio Assistant ہوں۔
 
-        <div class="card" onclick="openPanel('video')">
-            <div class="icon">🎬</div>
-            <h3>Image → Video</h3>
-            <p>Turn an image and prompt into a video clip.</p>
-        </div>
+ایک ہی chat میں اپنا کام بتائیں، مثلاً:
 
-        <div class="card" onclick="openPanel('voice')">
-            <div class="icon">🗣️</div>
-            <h3>AI Voice</h3>
-            <p>Create narration and voice audio.</p>
-        </div>
+"لاہور کی تاریخ پر 10 منٹ کی documentary بناؤ، اردو narration کے ساتھ۔"
 
-        <div class="card" onclick="openPanel('files')">
-            <div class="icon">📄</div>
-            <h3>PDF / Files</h3>
-            <p>Upload documents for your AI projects.</p>
-        </div>
-
+میں project کو scenes میں تقسیم کرکے
+script → images → video → voice → final video
+workflow کے لیے تیار کروں گا۔</div>
+      </div>
     </div>
 
-    <div id="chat" class="panel">
-        <h2>🧠 AI Chat</h2>
+    <div class="createBox">
+      <div class="composer">
 
-        <textarea id="chatInput"
-        placeholder="Ask your AI something..."></textarea>
+        <textarea id="prompt"
+          placeholder="اپنا کام یہاں لکھیں... مثال: پاکستان کی تاریخ پر 15 منٹ کی documentary بناؤ، اردو male voice کے ساتھ۔"></textarea>
 
-        <button onclick="demoChat()">Send</button>
+        <div class="toolbar">
 
-        <div id="chatOutput" class="output">
-            AI response will appear here.
+          <button class="tool" onclick="attachFile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+            </svg>
+            File
+          </button>
+
+          <button class="tool" onclick="addImage()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+              <circle cx="8.5" cy="8.5" r="1.6"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            Image
+          </button>
+
+          <button class="tool" onclick="chooseVoice()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="2" width="6" height="12" rx="3"/>
+              <path d="M5 11a7 7 0 0014 0M12 18v4M8 22h8"/>
+            </svg>
+            Voice
+          </button>
+
+          <button class="tool" onclick="addScene()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
+              <path d="M2.5 9.5h19M7 5v4.5M17 5v4.5"/>
+            </svg>
+            Scene
+          </button>
+
+          <button class="tool" onclick="makeScript()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V7z"/>
+              <path d="M14 2v5h5M9 13h6M9 17h4"/>
+            </svg>
+            Script
+          </button>
+
+          <button class="send" onclick="sendPrompt()" title="Create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+
         </div>
+      </div>
     </div>
 
-    <div id="script" class="panel">
-        <h2>✍️ Script Generator</h2>
+  </section>
 
-        <textarea
-        placeholder="Example: Create a 10-minute documentary about Lahore..."></textarea>
+  <!-- FEATURE CARDS -->
+  <section class="controls">
 
-        <button onclick="demoMessage('scriptOutput',
-        'Script generator is ready. AI API will be connected here.')">
-        Generate Script
-        </button>
-
-        <div id="scriptOutput" class="output">
-            Your script will appear here.
-        </div>
+    <div class="control">
+      <div class="controlIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V7z"/>
+          <path d="M14 2v5h5M9 13h6M9 17h4"/>
+        </svg>
+      </div>
+      <h3>AI Script</h3>
+      <p>Story, narration اور scenes تیار ہوں گے۔</p>
     </div>
 
-    <div id="image" class="panel">
-        <h2>🖼️ Image Generator</h2>
-
-        <textarea
-        placeholder="Describe the image you want..."></textarea>
-
-        <button onclick="demoMessage('imageOutput',
-        'Image generator interface is ready. Image API will be connected here.')">
-        Generate Image
-        </button>
-
-        <div id="imageOutput" class="output">
-            Generated image will appear here.
-        </div>
+    <div class="control">
+      <div class="controlIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+          <circle cx="8.5" cy="8.5" r="1.6"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </div>
+      <h3>AI Images</h3>
+      <p>ہر scene کے لیے images generate ہوں گی۔</p>
     </div>
 
-    <div id="video" class="panel">
-        <h2>🎬 Image → Video</h2>
+    <div class="control">
+      <div class="controlIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
+          <path d="M2.5 9.5h19M7 5v4.5M17 5v4.5"/>
+        </svg>
+      </div>
+      <h3>AI Video</h3>
+      <p>Images کو animated video clips میں تبدیل کیا جائے گا۔</p>
+    </div>
 
-        <input type="file" accept="image/*">
+    <div class="control">
+      <div class="controlIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="12" rx="3"/>
+          <path d="M5 11a7 7 0 0014 0M12 18v4M8 22h8"/>
+        </svg>
+      </div>
+      <h3>AI Voice</h3>
+      <p>Script سے narration/audio تیار ہوگی۔</p>
+    </div>
 
-        <textarea
-        placeholder="Describe the movement/camera animation..."></textarea>
+  </section>
 
-        <button onclick="demoMessage('videoOutput',
-        'Video generator interface is ready. Video API will be connected here.')">
+  <!-- SCENES -->
+  <section class="scenes">
+
+    <div class="sectionTitle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
+        <path d="M2.5 9.5h19M7 5v4.5M17 5v4.5"/>
+      </svg>
+      Project Scenes
+      <span class="badge" id="sceneCount" style="margin-left:auto">0 SCENES</span>
+    </div>
+
+    <div class="sceneList" id="sceneList">
+      <div class="emptyState">ابھی کوئی scene نہیں۔ اپنا project prompt لکھ کر <b>Create</b> دبائیں۔</div>
+    </div>
+
+    <div class="progress">
+      <div class="progressBar" id="progressBar"></div>
+    </div>
+
+    <div class="actions">
+
+      <button class="action" onclick="generateImages()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+          <circle cx="8.5" cy="8.5" r="1.6"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+        Generate Images
+      </button>
+
+      <button class="action" onclick="generateVideo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
+          <path d="M2.5 9.5h19M7 5v4.5M17 5v4.5"/>
+        </svg>
         Generate Video
-        </button>
+      </button>
 
-        <div id="videoOutput" class="output">
-            Generated video will appear here.
-        </div>
+      <button class="action primary" onclick="exportProject()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>
+        </svg>
+        Export Final Video
+      </button>
+
     </div>
 
-    <div id="voice" class="panel">
-        <h2>🗣️ AI Voice</h2>
+  </section>
 
-        <textarea
-        placeholder="Enter narration text..."></textarea>
+</main>
 
-        <select>
-            <option>Male Voice</option>
-            <option>Female Voice</option>
-            <option>Child-like Voice</option>
-        </select>
+<footer>My AI Studio • Personal AI Creation Workspace</footer>
 
-        <button onclick="demoMessage('voiceOutput',
-        'Voice generator interface is ready. TTS API will be connected here.')">
-        Generate Voice
-        </button>
-
-        <div id="voiceOutput" class="output">
-            Audio will appear here.
-        </div>
-    </div>
-
-    <div id="files" class="panel">
-        <h2>📄 PDF / Files</h2>
-
-        <input type="file"
-        accept=".pdf,.txt,.doc,.docx">
-
-        <button onclick="demoMessage('fileOutput',
-        'File upload interface is ready. AI document processing will be connected here.')">
-        Upload File
-        </button>
-
-        <div id="fileOutput" class="output">
-            Uploaded files will appear here.
-        </div>
-    </div>
-
-</div>
-
-<footer>
-    My AI Studio • Android AI Workspace
-</footer>
+<input type="file" id="hiddenFile" style="display:none">
 
 <script>
+/* =========================================================
+   ICON HELPERS  (inline SVG — no external images)
+   ========================================================= */
+const ICON = {
+  ai: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3.2"/>
+      </svg>`,
+  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0115 0"/>
+        </svg>`,
+  image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+           stroke-linecap="round" stroke-linejoin="round">
+           <rect x="4" y="5" width="16" height="14" rx="2"/>
+           <circle cx="9" cy="10" r="1.4"/><path d="M20 16l-4-4-8 7"/>
+         </svg>`
+};
 
-function openPanel(id) {
+/* =========================================================
+   STATE
+   ========================================================= */
+const messagesEl  = document.getElementById('messages');
+const promptEl    = document.getElementById('prompt');
+const sceneListEl = document.getElementById('sceneList');
+const progressBar = document.getElementById('progressBar');
+const sceneCount  = document.getElementById('sceneCount');
+const hiddenFile  = document.getElementById('hiddenFile');
 
-    document.querySelectorAll('.panel')
-    .forEach(panel => {
-        panel.classList.remove('active');
+let scenes  = [];      // { title, status, state, art }
+let typingEl = null;
+let busy     = false;
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+  ));
+}
+
+function setProgress(percent){
+  progressBar.style.width = Math.min(100, Math.max(0, percent)) + '%';
+}
+
+function scrollDown(){
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+/* =========================================================
+   CODE-GENERATED SCENE ARTWORK
+   Replaces every <img>/placeholder with a pure SVG generator
+   ========================================================= */
+function sceneArtwork(index, label){
+  const hue  = (index * 43 + 205) % 360;
+  const hue2 = (hue + 55) % 360;
+  const tag  = String(label || ('SCENE ' + String(index).padStart(2,'0')));
+
+  const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"   stop-color="hsl(${hue},62%,24%)"/>
+        <stop offset="100%" stop-color="hsl(${hue2},58%,9%)"/>
+      </linearGradient>
+      <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+        <path d="M26 0H0V26" fill="none" stroke="rgba(255,255,255,0.055)" stroke-width="1"/>
+      </pattern>
+    </defs>
+
+    <rect width="480" height="270" fill="url(#bg)"/>
+    <rect width="480" height="270" fill="url(#grid)"/>
+
+    <g opacity="0.5">
+      <circle cx="392" cy="60"  r="34" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <circle cx="392" cy="60"  r="18" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+      <circle cx="74"  cy="214" r="46" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/>
+    </g>
+
+    <g transform="translate(240 128)">
+      <circle r="30" fill="none" stroke="rgba(255,255,255,.30)" stroke-width="2"/>
+      <path d="M-10 0 L10 0 M0 -10 L0 10"
+            stroke="rgba(255,255,255,.30)" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <rect x="20" y="20" width="128" height="26" rx="13"
+          fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.18)"/>
+    <text x="84" y="37" text-anchor="middle"
+          font-family="Segoe UI, Arial, sans-serif" font-size="11.5"
+          font-weight="700" letter-spacing="1.4" fill="rgba(255,255,255,.86)">${tag}</text>
+
+    <text x="240" y="228" text-anchor="middle"
+          font-family="Segoe UI, Arial, sans-serif" font-size="12"
+          letter-spacing="2.6" fill="rgba(255,255,255,.45)">AI GENERATED FRAME</text>
+  </svg>`;
+
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+}
+
+/* =========================================================
+   CHAT RENDERING
+   ========================================================= */
+function addMessage(text, type){
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ' + type;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.innerHTML = (type === 'ai') ? ICON.ai : ICON.user;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  messagesEl.appendChild(wrap);
+  scrollDown();
+}
+
+function showTyping(){
+  if (typingEl) return;
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg ai';
+  typingEl.innerHTML =
+    '<div class="avatar">' + ICON.ai + '</div>' +
+    '<div class="bubble typing"><span></span><span></span><span></span></div>';
+  messagesEl.appendChild(typingEl);
+  scrollDown();
+}
+
+function hideTyping(){
+  if (typingEl){ typingEl.remove(); typingEl = null; }
+}
+
+/* =========================================================
+   SCENE MANAGEMENT
+   ========================================================= */
+function buildScenes(count){
+  scenes = [];
+  for (let i = 1; i <= count; i++){
+    scenes.push({
+      title : 'AI Scene ' + i,
+      status: 'Waiting for generation',
+      state : '',
+      art   : null
     });
-
-    const panel = document.getElementById(id);
-
-    if (panel) {
-        panel.classList.add('active');
-
-        panel.scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
+  }
+  renderScenes();
 }
 
-function demoMessage(id, message) {
+function renderScenes(){
+  sceneListEl.innerHTML = '';
 
-    document.getElementById(id).textContent = message;
+  sceneCount.textContent = scenes.length + ' SCENE' + (scenes.length === 1 ? '' : 'S');
+
+  if (!scenes.length){
+    sceneListEl.innerHTML =
+      '<div class="emptyState">ابھی کوئی scene نہیں۔ اپنا project prompt لکھ کر <b>Create</b> دبائیں۔</div>';
+    return;
+  }
+
+  scenes.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'scene';
+
+    const thumb = s.art
+      ? `<img src="${s.art}" alt="Scene ${i+1}">`
+      : ICON.image;
+
+    card.innerHTML = `
+      <div class="sceneThumb">${thumb}</div>
+      <div class="sceneNumber">SCENE ${String(i+1).padStart(2,'0')}</div>
+      <div class="sceneTitle">${escapeHTML(s.title)}</div>
+      <div class="sceneStatus ${s.state}">${escapeHTML(s.status)}</div>
+    `;
+
+    sceneListEl.appendChild(card);
+  });
 }
 
-function demoChat() {
+/* =========================================================
+   MAIN FLOW
+   ========================================================= */
+function sendPrompt(){
+  if (busy) return;
 
-    const input =
-        document.getElementById('chatInput').value.trim();
+  const text = promptEl.value.trim();
 
-    const output =
-        document.getElementById('chatOutput');
+  if (!text){
+    addMessage('پہلے اپنا کام لکھیں۔ مثال: لاہور پر documentary بناؤ۔', 'ai');
+    return;
+  }
 
-    if (!input) {
-        output.textContent = 'Please enter a message first.';
-        return;
-    }
+  busy = true;
+  addMessage(text, 'user');
+  promptEl.value = '';
+  showTyping();
 
-    output.textContent =
-        'Your AI connection is not connected yet.\n\n' +
-        'Your message:\n' + input +
-        '\n\nNext step: connect the AI model/API.';
+  setTimeout(() => {
+    hideTyping();
+
+    addMessage(
+      '✓ Project request received.\n\n' +
+      'AI workflow:\n' +
+      '1. Script\n' +
+      '2. Scenes\n' +
+      '3. Images\n' +
+      '4. Video clips\n' +
+      '5. Voice\n' +
+      '6. Music / SFX\n' +
+      '7. Final MP4\n\n' +
+      'Scenes تیار کر دیے گئے ہیں۔ اب Generate Images دبائیں۔',
+      'ai'
+    );
+
+    buildScenes(6);
+    setProgress(18);
+    busy = false;
+
+  }, 900);
 }
 
+/* ---------- TOOLBAR ACTIONS ---------- */
+function makeScript(){
+  addMessage(
+    '📝 Script Generator\n\n' +
+    'Script module selected. آپ اپنا topic لکھیں، AI اسے scenes اور narration میں تبدیل کرے گا۔',
+    'ai'
+  );
+}
+
+function addImage(){
+  addMessage(
+    '🖼️ Image module selected.\n\n' +
+    'آپ image upload کرکے اسے کسی بھی scene کے ساتھ attach کر سکیں گے۔',
+    'ai'
+  );
+}
+
+function chooseVoice(){
+  addMessage(
+    '🗣️ Voice module selected.\n\n' +
+    'Male / Female voice options backend connect ہونے کے بعد available ہوں گے۔',
+    'ai'
+  );
+}
+
+function attachFile(){
+  hiddenFile.click();
+}
+
+hiddenFile.addEventListener('change', () => {
+  const f = hiddenFile.files[0];
+  if (!f) return;
+  addMessage(
+    '📎 File attached: ' + f.name + '\n\n' +
+    'یہ file AI knowledge کے لیے project context میں شامل کر دی جائے گی۔',
+    'ai'
+  );
+  hiddenFile.value = '';
+});
+
+function addScene(){
+  scenes.push({
+    title : 'New Scene',
+    status: 'Waiting for generation',
+    state : '',
+    art   : null
+  });
+  renderScenes();
+}
+
+/* ---------- GENERATION PIPELINE ---------- */
+function generateImages(){
+  if (!scenes.length){
+    addMessage('پہلے project بنائیں — Create دبائیں۔', 'ai');
+    return;
+  }
+
+  scenes.forEach(s => { s.status = 'Rendering frame…'; s.state = 'working'; });
+  renderScenes();
+  setProgress(34);
+
+  scenes.forEach((s, i) => {
+    setTimeout(() => {
+      s.art    = sceneArtwork(i + 1);
+      s.status = 'Image ready';
+      s.state  = 'done';
+      renderScenes();
+      setProgress(34 + ((i + 1) / scenes.length) * 22);
+
+      if (i === scenes.length - 1){
+        addMessage('🖼️ تمام scenes کی images generate ہو گئیں۔', 'ai');
+      }
+    }, 380 * (i + 1));
+  });
+}
+
+function generateVideo(){
+  if (!scenes.some(s => s.art)){
+    addMessage('پہلے Generate Images دبائیں۔', 'ai');
+    return;
+  }
+
+  scenes.forEach(s => { s.status = 'Animating clip…'; s.state = 'working'; });
+  renderScenes();
+  setProgress(62);
+
+  scenes.forEach((s, i) => {
+    setTimeout(() => {
+      s.status = 'Video clip ready';
+      s.state  = 'done';
+      renderScenes();
+      setProgress(62 + ((i + 1) / scenes.length) * 20);
+
+      if (i === scenes.length - 1){
+        addMessage('🎬 تمام scenes کے video clips تیار ہیں۔', 'ai');
+      }
+    }, 320 * (i + 1));
+  });
+}
+
+function exportProject(){
+  if (!scenes.length){
+    addMessage('پہلے project بنائیں — Create دبائیں۔', 'ai');
+    return;
+  }
+
+  setProgress(92);
+  addMessage('🎞️ Final export شروع ہو گیا… MP4 render ہو رہا ہے۔', 'ai');
+
+  setTimeout(() => {
+    scenes.forEach(s => { s.status = 'Exported'; s.state = 'done'; });
+    renderScenes();
+    setProgress(100);
+    addMessage('✅ Final video export مکمل۔\n\n(اصل rendering کے لیے backend / video engine connect کرنا باقی ہے۔)', 'ai');
+  }, 1400);
+}
 </script>
 
 </body>
