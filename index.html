@@ -904,13 +904,13 @@ function renderScenes(){
 /* =========================================================
    MAIN FLOW
    ========================================================= */
-function sendPrompt(){
+async function sendPrompt(){
   if (busy) return;
 
   const text = promptEl.value.trim();
 
   if (!text){
-    addMessage('پہلے اپنا کام لکھیں۔ مثال: لاہور پر documentary بناؤ۔', 'ai');
+    addMessage('پہلے اپنا کام لکھیں۔', 'ai');
     return;
   }
 
@@ -919,30 +919,43 @@ function sendPrompt(){
   promptEl.value = '';
   showTyping();
 
-  setTimeout(() => {
+  try {
+    const response = await fetch(
+      'https://my-ai-studio.asifkreem289.workers.dev/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: text })
+      }
+    );
+
+    const data = await response.json();
+
     hideTyping();
 
+    if (!response.ok) {
+      throw new Error(data.error || 'AI request failed');
+    }
+
     addMessage(
-      '✓ Project request received.\n\n' +
-      'AI workflow:\n' +
-      '1. Script\n' +
-      '2. Scenes\n' +
-      '3. Images\n' +
-      '4. Video clips\n' +
-      '5. Voice\n' +
-      '6. Music / SFX\n' +
-      '7. Final MP4\n\n' +
-      'Scenes تیار کر دیے گئے ہیں۔ اب Generate Images دبائیں۔',
+      data.response || 'AI کی طرف سے جواب موصول نہیں ہوا۔',
       'ai'
     );
 
-    buildScenes(6);
-    setProgress(18);
+  } catch (error) {
+    hideTyping();
+    addMessage(
+      'معذرت، AI سے رابطہ نہیں ہو سکا۔\n\n' +
+      'تفصیل: ' + error.message,
+      'ai'
+    );
+  } finally {
     busy = false;
-
-  }, 900);
+  }
 }
-
+  
 /* ---------- TOOLBAR ACTIONS ---------- */
 function makeScript(){
   addMessage(
