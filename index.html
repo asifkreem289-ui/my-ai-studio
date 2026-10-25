@@ -994,10 +994,21 @@ async function makeScript(){
       throw new Error(data.error || 'AI request failed');
     }
 
+        const scriptText = data.response || 'AI سے کوئی جواب موصول نہیں ہوا۔';
+
+    const scriptId = 'script-' + Date.now();
+
     addMessage(
-      '📝 آپ کا اسکرپٹ\n\n' +
-      (data.response || 'AI سے کوئی جواب موصول نہیں ہوا۔'),
-      'ai'
+      '<div class="script-result">' +
+        '<h3>📝 آپ کا اسکرپٹ</h3>' +
+        '<pre id="' + scriptId + '" style="white-space:pre-wrap;overflow-wrap:anywhere;">' +
+          escapeHTML(scriptText) +
+        '</pre>' +
+        '<button onclick="copyScript(\'' + scriptId + '\')">📋 Copy Script</button> ' +
+        '<button onclick="downloadScript(\'' + scriptId + '\')">📥 Download Script</button>' +
+      '</div>',
+      'ai',
+      true
     );
 
   } catch (error) {
