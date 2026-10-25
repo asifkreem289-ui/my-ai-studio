@@ -957,13 +957,60 @@ async function sendPrompt(){
 }
   
 /* ---------- TOOLBAR ACTIONS ---------- */
-function makeScript(){
-  addMessage(
-    '📝 Script Generator\n\n' +
-    'Script module selected. آپ اپنا topic لکھیں، AI اسے scenes اور narration میں تبدیل کرے گا۔',
-    'ai'
+async function makeScript(){
+  if (busy) return;
+
+  const topic = prompt(
+    'اپنی کہانی یا ڈاکیومنٹری کا موضوع لکھیں:',
+    promptEl.value.trim()
   );
-}
+
+  if (!topic || !topic.trim()) return;
+
+  busy = true;
+  addMessage('📝 اسکرپٹ تیار کریں: ' + topic, 'user');
+  showTyping();
+
+  try {
+    const response = await fetch(
+      'https://my-ai-studio.asifkreem289.workers.dev/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt:
+            'آپ ایک ماہر اسکرپٹ رائٹر ہیں۔ اس موضوع پر اردو میں مکمل ویڈیو اسکرپٹ بنائیں: ' +
+            topic +
+            '\n\nاسکرپٹ میں عنوان، تعارف، سین بہ سین تفصیل، ہر سین کی نریشن، تصویر بنانے کا پرامپٹ اور اختتام شامل کریں۔'
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'AI request failed');
+    }
+
+    addMessage(
+      '📝 آپ کا اسکرپٹ\n\n' +
+      (data.response || 'AI سے کوئی جواب موصول نہیں ہوا۔'),
+      'ai'
+    );
+
+  } catch (error) {
+    addMessage(
+      'معذرت، اسکرپٹ تیار نہیں ہو سکا۔\n\n' +
+      error.message,
+      'ai'
+    );
+  } finally {
+    hideTyping();
+    busy = false;
+  }
+  }
 
 function addImage(){
   addMessage(
